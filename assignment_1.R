@@ -168,11 +168,11 @@ monthly_wide  %>%
 # For this to work instead: comment out summarize line and prior pipe
 # when generating monthly_wide
 
-#monthly_wide  %>%
-#  ggplot(aes(x=factor(month), y=ndsi, color=treatment)) +
-#  geom_boxplot(outlier.size=1, outlier.alpha=0.5) +
-#  facet_wrap(~site) +
-#  theme_few() +
-#  scale_color_few() +
-#  theme(legend.position = c(0.75,0.8)) +
-#  xlab('Month') + ylab('NDSI')
+  #monthly_wide  %>%
+  #  ggplot(aes(x=factor(month), y=ndsi, color=treatment)) +
+  #  geom_boxplot(outlier.size=1, outlier.alpha=0.5) +
+  #  facet_wrap(~site) +
+  #  theme_few() +
+  #  scale_color_few() +
+  #  theme(legend.position = c(0.75,0.8)) +
+  #  xlab('Month') + ylab('NDSI')
