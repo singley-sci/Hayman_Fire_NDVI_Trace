@@ -50,7 +50,7 @@ summer_wide <- full_wide %>%
   filter(month %in% c(6:9)) %>%
   mutate(season='summer') #add column 'season' with value 'summer'
 
-# Plot of NDVI vs NDMI colored by site
+# Plot NDVI vs NDMI colored by site
 summer_wide %>%
   ggplot(aes(x=ndmi, y=ndvi, color=site)) +
   geom_point(alpha=0.8) +
@@ -68,23 +68,25 @@ summer_wide %>%
 #In other words, does the previous year's snow cover influence vegetation
 # growth for the following summer? 
 
-# Filter out winter only 
+# Filter out winter only add season column filled with 'winter'
 winter_wide <- full_wide %>%
   filter(month %in% c(1:4)) %>%
   mutate(season='winter')
 
+# Join summer and winter tibbles, group, and calculate means
 seasons_wide <- full_join(x=winter_wide, y=summer_wide) %>%
   group_by(site,season, year) %>%
   summarize(mean_ndvi=mean(ndvi), mean_ndsi=mean(ndsi))
 #view(seasons_wide)
 
-# Plot of summer NDVI vs NDSI from prior witner
+# Plot of mean summer NDVI against prior winter NDSI by site
 seasons_wide %>%
   ggplot(aes(x=mean_ndsi, y=mean_ndvi, color=site)) +
   geom_point(alpha=0.8) +
   theme_few() +
   scale_color_hc() + #color scale used for sites
-  theme(legend.position = c(0.8,0.8))
+  theme(legend.position = c(0.8,0.8)) +
+  xlab('Mean NDSI (Prior Winter)') + ylab('Mean Summer NDVI')
 
 ## Your code here
 
@@ -95,18 +97,21 @@ seasons_wide %>%
 #How is the snow effect from question 2 different between pre- and post-burn
 # and burned and unburned? 
 
+# Join summer and winter tibbles, group (incl. treatment), and calculate means
 seasons_treatment_wide <- full_join(x=winter_wide, y=summer_wide) %>%
   group_by(site,season,treatment, year) %>%
   summarize(mean_ndvi=mean(ndvi), mean_ndsi=mean(ndsi))
 #view(seasons_treatment_wide)
 
+# Plot of mean summer NDVI against prior winter NDSI by site and treatment
 seasons_treatment_wide %>%
   ggplot(aes(x=mean_ndsi, y=mean_ndvi, color=treatment)) +
   geom_point(alpha=0.8) +
   facet_wrap(~site) +
   theme_few() +
   scale_color_few() + #color scale used for site
-  theme(legend.position = c(0.7,0.2))
+  theme(legend.position = c(0.7,0.2)) +
+  xlab('Mean NDSI (Prior Winter)') + ylab('Mean Summer NDVI')
 
 ## End code for question 3
 
@@ -114,6 +119,7 @@ seasons_treatment_wide %>%
 #What month is the greenest month on average? Does this change in the burned
 # plots after the fire? 
 
+# Group data monthly and calculate means of each measure
 monthly_wide <- full_wide %>%
   group_by(site, month, treatment) %>%
   summarize(mean_ndvi=mean(ndvi), mean_ndsi=mean(ndsi), mean_ndmi=mean(ndmi))
@@ -147,6 +153,7 @@ monthly_wide  %>%
 ##### Question 5 ####
 #What month is the snowiest on average?
 
+# Line plot of monthly average NDSI by site and treatment
 monthly_wide  %>%
   ggplot(aes(x=month, y=mean_ndsi, color=treatment)) +
   geom_line() +
