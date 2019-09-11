@@ -86,9 +86,7 @@ seasons_wide %>%
   theme_few() +
   scale_color_hc() + #color scale used for sites
   theme(legend.position = c(0.8,0.8)) +
-  xlab('Mean NDSI (Prior Winter)') + ylab('Mean Summer NDVI')
-
-## Your code here
+  xlab('Mean NDSI (Prior Winter)') + ylab('Mean Summer NDVI') 
 
 ## End code for question 2 -----------------
 
