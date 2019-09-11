@@ -122,12 +122,26 @@ q_means <- q_water_year %>%
             median_q=median(q_cfs))
 
 q_means
+
+means <- inner_join(q_means, snow_means, by='wtr_yr')
 ```
 
 # Plots of Snow Cover vs Q
 
 ## Mean Snow vs Median Q
 ```{r, echo=FALSE}
-
+means %>%
+  ggplot(aes(x=mean_ndsi, y=median_q, color = wtr_yr)) +
+  geom_point() +
+  xlab('Mean Snow Cover') +
+  ylab('Median Discharge (cfs)')
 ```
 
+## Max Snow vs Median Q
+```{r, echo=FALSE}
+means %>%
+  ggplot(aes(x=max_ndsi, y=median_q, color = wtr_yr)) +
+  geom_point() +
+  xlab('Max Snow Cover') +
+  ylab('Median Discharge (cfs)')
+```
