@@ -1,18 +1,25 @@
 ---
 title: "Snow cover impacts on watershed discharge"
 author: "Joel Singley"
-date: "9/10/2019"
-output: html_document
+date: "9/12/2019"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
 editor_options: 
   chunk_output_type: console
 ---
 
 ```{r, include=FALSE, warning=FALSE, message=FALSE}
+library(rmarkdown)
+library(knitr)
 library(dataRetrieval)
+
 knitr::opts_chunk$set(echo = TRUE)
+#knitr:opts_knit$set(root.dir='..') #set root dir up one level from Rmd location, to go two up '../..' - MAYBE not necessary on Mac?
 ```
 
-# How do remotely sensed snow cover metrics impact discharge in the same water year in central Colorado?
+## How do remotely sensed snow cover metrics impact discharge in the same water year in central Colorado?
 
 ## Data checking
 
@@ -24,9 +31,8 @@ library(tidyverse)
 library(lubridate)
 library(dataRetrieval) #for downloading USGS data
 
-
 #ndsi 
-ndsi <- read_csv('data/hayman_ndsi.csv') %>%
+ndsi <- read_csv('../data/hayman_ndsi.csv') %>%
   rename(burned=2,unburned=3) %>%
   filter(!is.na(burned),
          !is.na(unburned)) %>%
@@ -63,13 +69,13 @@ summary(q_hayman)
 
 ```
 
-# Combining the data
+## Combining the data
 
-## Adding a water year column
+### Adding a water year column
 
 When analyzing water flux data, we typically break the year up into “water years” which run from October to the end of September. For this exploratory analysis, we want to group the datasets by water year and then join them to each other so we can compare winter average, max, median, etc… of snow cover versus the next water year’s water flux. So we have to add a column called water year
 
-### Q water year
+#### Q water year
 
 ```{r}
 q_water_year <- q_hayman %>%
@@ -80,7 +86,7 @@ q_water_year <- q_hayman %>%
 table(q_water_year$wtr_yr)
 ```
 
-### NDSI water year
+#### NDSI water year
 
 ```{r, echo=FALSE}
 ndsi_water_year <- ndsi %>%
@@ -91,11 +97,11 @@ ndsi_water_year <- ndsi %>%
 table(ndsi_water_year$wtr_yr)
 ```
 
-## Filtering and summarizing
+### Filtering and summarizing
 
 Now that we have our matched datasets we want to do a couple filtering operations. First, we want to make sure that we are only analyzing complete water years from the Q dataset. Second, we want to make sure we are only summarizing the snow data over months where snow cover is possible, which I would guess is between october and may. Once we have these filtering operations done, we want to summarize each dataset by water year so we can eventually join them and see if snow cover predicts Q.
 
-### Snow water year summary statistics
+#### Snow water year summary statistics
 
 ```{r, echo=FALSE}
 snow_means <- ndsi_water_year %>%
@@ -108,7 +114,7 @@ snow_means <- ndsi_water_year %>%
 snow_means
 ```
 
-### Whole Q water year summaries
+#### Whole Q water year summaries
 
 ```{r, echo=FALSE}
 q_means <- q_water_year %>%
@@ -126,9 +132,9 @@ q_means
 means <- inner_join(q_means, snow_means, by='wtr_yr')
 ```
 
-# Plots of Snow Cover vs Q
+## Plots of Snow Cover vs Q
 
-## Mean Snow vs Median Q
+### Mean Snow vs Median Q
 ```{r, echo=FALSE}
 means %>%
   ggplot(aes(x=mean_ndsi, y=median_q, color = wtr_yr)) +
@@ -137,7 +143,7 @@ means %>%
   ylab('Median Discharge (cfs)')
 ```
 
-## Max Snow vs Median Q
+### Max Snow vs Median Q
 ```{r, echo=FALSE}
 means %>%
   ggplot(aes(x=max_ndsi, y=median_q, color = wtr_yr)) +
