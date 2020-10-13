@@ -32,7 +32,7 @@ library(lubridate)
 library(dataRetrieval) #for downloading USGS data
 
 #ndsi 
-ndsi <- read_csv('../data/hayman_ndsi.csv') %>%
+ndsi <- read_csv('./data/hayman_ndsi.csv') %>%
   rename(burned=2,unburned=3) %>%
   filter(!is.na(burned),
          !is.na(unburned)) %>%
